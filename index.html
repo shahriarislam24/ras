@@ -1,0 +1,682 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AS Level Complete Daily Schedule</title>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-dark: #0a0a0a;
+            --bg-card: #1a1410;
+            --accent-beige: #d4a574;
+            --accent-gold: #c9975b;
+            --accent-sand: #e8d5b7;
+            --text-primary: #f5e6d3;
+            --text-secondary: #a89175;
+            --border: #2d251f;
+        }
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'JetBrains Mono', monospace;
+            background: var(--bg-dark);
+            color: var(--text-primary);
+            line-height: 1.5;
+            font-size: 14px;
+        }
+        
+        .hero {
+            background: linear-gradient(135deg, #2d251f 0%, #1a1410 100%);
+            padding: 1.5rem;
+            text-align: center;
+            border-bottom: 1px solid var(--accent-gold);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .hero h1 {
+            font-family: 'Instrument Serif', serif;
+            font-size: 2rem;
+            color: var(--accent-sand);
+        }
+        
+        .hero p {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            margin-top: 0.3rem;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1rem;
+        }
+        
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 0.8rem;
+            margin: 1rem 0;
+        }
+        
+        .stat-box {
+            background: var(--bg-card);
+            border: 1px solid var(--accent-gold);
+            border-radius: 4px;
+            padding: 1rem;
+            text-align: center;
+        }
+        
+        .stat-number {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--accent-gold);
+            display: block;
+        }
+        
+        .stat-label {
+            color: var(--text-secondary);
+            font-size: 0.7rem;
+            text-transform: uppercase;
+        }
+        
+        .split-info {
+            background: var(--bg-card);
+            border: 1px solid var(--accent-beige);
+            border-radius: 4px;
+            padding: 1rem;
+            margin: 1rem 0;
+        }
+        
+        .split-info h3 {
+            color: var(--accent-beige);
+            font-size: 1.1rem;
+            margin-bottom: 0.8rem;
+        }
+        
+        .subject-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.6rem;
+            margin: 0.4rem 0;
+            background: rgba(212, 165, 116, 0.05);
+            border-radius: 3px;
+            border-left: 2px solid var(--accent-gold);
+        }
+        
+        .day-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            padding: 1rem;
+            margin: 0.8rem 0;
+        }
+        
+        .day-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 0.8rem;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 0.8rem;
+            cursor: pointer;
+            user-select: none;
+        }
+        
+        .day-header:hover {
+            opacity: 0.8;
+        }
+        
+        .day-title {
+            font-size: 1.1rem;
+            color: var(--accent-gold);
+            font-weight: 700;
+        }
+        
+        .day-meta {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+        }
+        
+        .task-section {
+            margin: 0.8rem 0;
+        }
+        
+        .task-header {
+            font-weight: 700;
+            color: var(--accent-beige);
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            margin-bottom: 0.5rem;
+            letter-spacing: 0.5px;
+        }
+        
+        .task-list {
+            background: rgba(0,0,0,0.2);
+            border-left: 2px solid var(--accent-gold);
+            padding: 0.8rem;
+            border-radius: 3px;
+        }
+        
+        .task-item {
+            display: flex;
+            gap: 0.6rem;
+            margin: 0.4rem 0;
+            font-size: 0.8rem;
+            line-height: 1.4;
+        }
+        
+        .task-item input[type="checkbox"] {
+            margin-top: 0.2rem;
+            width: 14px;
+            height: 14px;
+            cursor: pointer;
+            accent-color: var(--accent-gold);
+            flex-shrink: 0;
+        }
+        
+        .task-item label {
+            cursor: pointer;
+            flex: 1;
+        }
+        
+        .phase-divider {
+            background: linear-gradient(90deg, transparent, var(--accent-gold), transparent);
+            height: 2px;
+            margin: 2rem 0;
+        }
+        
+        .phase-title {
+            font-family: 'Instrument Serif', serif;
+            font-size: 1.8rem;
+            color: var(--accent-gold);
+            text-align: center;
+            margin: 2rem 0 1rem 0;
+        }
+        
+        .note {
+            background: rgba(212, 165, 116, 0.1);
+            border: 1px solid var(--accent-beige);
+            border-radius: 4px;
+            padding: 0.8rem;
+            margin: 0.8rem 0;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+        
+        .collapsed .task-section {
+            display: none;
+        }
+        
+        .expand-all, .collapse-all {
+            background: var(--accent-gold);
+            color: var(--bg-dark);
+            border: none;
+            padding: 0.6rem 1.2rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 600;
+            font-size: 0.8rem;
+            margin: 0.5rem;
+        }
+        
+        .expand-all:hover, .collapse-all:hover {
+            opacity: 0.8;
+        }
+        
+        .controls {
+            text-align: center;
+            margin: 1rem 0;
+            position: sticky;
+            top: 100px;
+            background: var(--bg-dark);
+            padding: 0.8rem;
+            z-index: 90;
+            border-bottom: 1px solid var(--border);
+        }
+        
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 1.5rem; }
+            .stats { grid-template-columns: 1fr 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <div class="hero">
+        <h1>Complete Daily Study Plan</h1>
+        <p>Jan 29 - June 30, 2026 | 153 Days</p>
+    </div>
+
+    <div class="container">
+        <div class="stats">
+            <div class="stat-box">
+                <span class="stat-number" id="daysLeft">153</span>
+                <span class="stat-label">Days Left</span>
+            </div>
+            <div class="stat-box">
+                <span class="stat-number">9h</span>
+                <span class="stat-label">Daily</span>
+            </div>
+            <div class="stat-box">
+                <span class="stat-number">50+</span>
+                <span class="stat-label">Papers</span>
+            </div>
+        </div>
+
+        <div class="split-info">
+            <h3>Daily Time Split</h3>
+            <div class="subject-row">
+                <span>Chemistry</span>
+                <span style="color: var(--accent-gold); font-weight: 700;">4.0h</span>
+            </div>
+            <div class="subject-row">
+                <span>Physics</span>
+                <span style="color: var(--accent-gold); font-weight: 700;">3.5h</span>
+            </div>
+            <div class="subject-row">
+                <span>Math M1 + Past Papers</span>
+                <span style="color: var(--accent-gold); font-weight: 700;">1.5h</span>
+            </div>
+        </div>
+
+        <div class="controls">
+            <button class="expand-all" onclick="expandAll()">Expand All Days</button>
+            <button class="collapse-all" onclick="collapseAll()">Collapse All Days</button>
+        </div>
+
+        <div class="phase-divider"></div>
+        <div class="phase-title">PHASE 1: Foundation (Weeks 1-3)</div>
+        <div class="note"><strong>Week 1:</strong> 5h/day | Week 2: 7h/day | Week 3: 9h/day | Build stamina gradually</div>
+
+        <div id="schedule"></div>
+    </div>
+
+    <script>
+        const schedule = [
+// WEEK 1 (5h/day) - Jan 29 to Feb 4
+{date:"2026-01-29",day:"Wed",week:1,hours:5,coaching:"3-10PM",chem:["Learn: Atomic structure - electron config","Practice: 10 electron arrangement problems","Recall: Write config from memory"],physics:["Learn: Physical quantities, SI units","Practice: Unit conversions (8 problems)"],math:["Learn: M1 Forces basics, free body diagrams"]},
+
+{date:"2026-01-30",day:"Thu",week:1,hours:5,coaching:"",chem:["Learn: Isotopes, relative atomic mass","Practice: Mass spec calculations (10)","Recall: Explain mass spec without notes"],physics:["Learn: Scalars vs vectors","Practice: Vector addition/resolution (10)"],math:["Practice: Draw 5 free body diagrams"]},
+
+{date:"2026-01-31",day:"Fri",week:1,hours:5,coaching:"3-5PM",chem:["Learn: Stoichiometry - mole concept","Practice: Mole calculations (12)","Recall: Write mole formulas from memory"],physics:["Learn: Kinematics - displacement, velocity","Practice: Basic motion problems (8)"],math:["Learn: Resolving forces into components"]},
+
+{date:"2026-02-01",day:"Sat",week:1,hours:5,coaching:"6:30-10PM",chem:["REVIEW: Redo difficult Chemistry problems","Create 1-page summary sheets"],physics:["REVIEW: Redo difficult Physics problems","Practice vector resolution"],math:["REVIEW: Practice equilibrium problems (5)"]},
+
+{date:"2026-02-02",day:"Sun",week:1,hours:5,coaching:"3-10PM",chem:["Learn: Empirical & molecular formulas","Practice: Formula determination (10)","Recall: Solve 3 from memory"],physics:["Learn: Equations of motion (SUVAT)","Practice: SUVAT problems (8)"],math:["Practice: M1 equilibrium mixed problems"]},
+
+{date:"2026-02-03",day:"Mon",week:1,hours:5,coaching:"6:30-10PM",chem:["Learn: Chemical bonding - ionic","Practice: Lewis structures ionic (10)","Recall: Draw structures no reference"],physics:["Learn: Graphs of motion (s-t, v-t)","Practice: Interpret/draw graphs (8)"],math:["Review: All forces week 1, solve 3 mixed"]},
+
+{date:"2026-02-04",day:"Tue",week:1,hours:5,coaching:"",chem:["WEEK REVIEW: Self-test atomic structure","Self-test stoichiometry and bonding"],physics:["WEEK REVIEW: Self-test units","Self-test vectors and kinematics"],math:["WEEK REVIEW: Self-test forces","Identify weak areas"]},
+
+// WEEK 2 (7h/day) - Feb 5 to Feb 11
+{date:"2026-02-05",day:"Wed",week:2,hours:7,coaching:"3-10PM",chem:["Learn: Covalent bonding - single/double/triple","Practice: Lewis structures molecules (15)","Learn: Dative covalent bonds","Recall: Explain all bonding types"],physics:["Learn: Projectile motion","Practice: Projectile problems (12)","Recall: Derive projectile equations"],math:["Learn: Friction - coefficient μ","Practice: Friction horizontal surfaces (6)"]},
+
+{date:"2026-02-06",day:"Thu",week:2,hours:7,coaching:"",chem:["Learn: Metallic bonding, van der Waals","Learn: Hydrogen bonding","Practice: Identify bonding types (15)","Recall: Explain all from memory"],physics:["Learn: Newton's First Law","Learn: Newton's Second Law F=ma","Practice: F=ma problems (12)"],math:["Practice: Friction on inclined planes (8)","Recall: Draw force diagrams"]},
+
+{date:"2026-02-07",day:"Fri",week:2,hours:7,coaching:"3-5PM",chem:["Learn: VSEPR theory - molecular shapes","Practice: Determine shapes (20 molecules)","Learn: Bond angles, polarity","Recall: Sketch shapes from memory"],physics:["Learn: Newton's Third Law","Practice: Combined Newton's Laws (10)","Learn: Weight, mass, g-field"],math:["Learn: Connected particles, pulleys","Practice: Pulley systems (5)"]},
+
+{date:"2026-02-08",day:"Sat",week:2,hours:7,coaching:"6:30-10PM",chem:["REVIEW: All bonding types","Create bonding comparison chart","Practice mixed bonding (20)"],physics:["REVIEW: All motion and forces","Redo difficult problems","Practice Newton's Laws mix"],math:["REVIEW: Mixed equilibrium & friction","Create summary sheets"]},
+
+{date:"2026-02-09",day:"Sun",week:2,hours:7,coaching:"3-10PM",chem:["Learn: States of matter structure","Learn: Phase diagrams","Practice: Ideal gas equation (10)"],physics:["Learn: Momentum definition","Practice: Momentum conservation (10)","Recall: Derive momentum equations"],math:["Learn: Kinematics in M1","Practice: Displacement-velocity graphs (5)"]},
+
+{date:"2026-02-10",day:"Mon",week:2,hours:7,coaching:"6:30-10PM",chem:["Learn: Enthalpy changes ΔH","Learn: Standard enthalpy (formation)","Practice: Enthalpy calculations (12)"],physics:["Learn: Impulse, force-time graphs","Practice: Impulse & collisions (10)","Recall: Explain collision types"],math:["Learn: Variable acceleration","Practice: Motion under gravity (6)"]},
+
+{date:"2026-02-11",day:"Tue",week:2,hours:7,coaching:"",chem:["WEEK REVIEW: Self-test bonding","Self-test states, enthalpy","Past paper questions (5)"],physics:["WEEK REVIEW: Self-test dynamics","Self-test momentum","Past paper questions (5)"],math:["WEEK REVIEW: Self-test week 2","Past paper M1 questions (3)"]},
+
+// WEEK 3 (9h/day FULL) - Feb 12 to Feb 18
+{date:"2026-02-12",day:"Wed",week:3,hours:9,coaching:"3-10PM",chem:["Learn: Hess's Law - enthalpy cycles","Practice: Hess's Law (15 - HARD)","Learn: Bond enthalpies","Recall: Draw cycles no notes"],physics:["Learn: Work done W=Fd","Learn: Energy - KE, PE, elastic PE","Practice: Work & energy (15)","Recall: Derive energy equations"],math:["Learn: Newton's Laws in M1","Practice: F=ma connected particles (8)","Solve 2 P2/P3 past papers"]},
+
+{date:"2026-02-13",day:"Thu",week:3,hours:9,coaching:"",chem:["Practice: More Hess's Law (15)","Learn: Calorimetry calculations","Practice: Enthalpy experiments (10)","Recall: All energetics concepts"],physics:["Learn: Power P=W/t, P=Fv","Practice: Power calculations (15)","Learn: Efficiency","Practice: Efficiency problems (10)"],math:["Practice: M1 dynamics mixed (10)","Solve 3 P2 past papers"]},
+
+{date:"2026-02-14",day:"Fri",week:3,hours:9,coaching:"3-5PM",chem:["Learn: Rate of reaction factors","Learn: Collision theory","Practice: Rate problems (12)","Recall: Explain collision theory"],physics:["Learn: Density ρ=m/V","Practice: Density problems (12)","Learn: Pressure in fluids p=ρgh","Practice: Pressure (10)"],math:["Learn: M1 momentum basics","Practice: Momentum problems (8)","Solve 2 P3 past papers"]},
+
+{date:"2026-02-15",day:"Sat",week:3,hours:9,coaching:"6:30-10PM",chem:["REVIEW: All energetics","Intensive Hess's Law practice (20)","Review weak topics"],physics:["REVIEW: Work, energy, power","Review density & pressure","Mixed practice problems (20)"],math:["REVIEW: All M1 so far","Practice mixed M1 (15)","Past papers P2/P3 (3)"]},
+
+{date:"2026-02-16",day:"Sun",week:3,hours:9,coaching:"3-10PM",chem:["Learn: Rate equations, order","Practice: Order determination (15)","Learn: Rate constant k","Recall: Write rate laws from data"],physics:["Learn: Upthrust, Archimedes","Practice: Buoyancy problems (15)","Learn: Atmospheric pressure","Practice: Fluid statics (10)"],math:["Practice: M1 momentum (10)","Solve 3 P2/P3 mixed papers"]},
+
+{date:"2026-02-17",day:"Mon",week:3,hours:9,coaching:"6:30-10PM",chem:["Learn: Half-life for 1st order","Practice: Half-life calculations (10)","Learn: Arrhenius equation","Practice: Activation energy (10)"],physics:["Learn: Hooke's Law F=kx","Practice: Spring problems (15)","Learn: Elastic PE = ½kx²","Practice: Energy in springs (10)"],math:["Learn: M1 energy, work, power","Practice: M1 energy problems (10)","Past papers (3)"]},
+
+{date:"2026-02-18",day:"Tue",week:3,hours:9,coaching:"",chem:["WEEK REVIEW: Energetics full test","Kinetics full test","Past papers (8)"],physics:["WEEK REVIEW: Mechanics review","Fluids review","Past papers (8)"],math:["WEEK REVIEW: All M1 topics","Intensive past papers (5)"]},
+
+// PHASE 2 BEGINS - WEEK 4 (9h/day) - Feb 19 to Feb 25
+{date:"2026-02-19",day:"Wed",week:4,hours:9,coaching:"3-10PM",chem:["EQUILIBRIA: Dynamic equilibrium, reversible","Learn: Le Chatelier's Principle","Practice: Le Chatelier (15 predictions)","Recall: Explain shifts without notes"],physics:["ELECTRICITY: Current, charge, Q=It","Learn: Potential difference","Practice: Current & pd basics (15)","Recall: Explain circuit fundamentals"],math:["Learn: M1 connected systems","Practice: Complex pulleys (10)","Past papers P2/P3 (3)"]},
+
+{date:"2026-02-20",day:"Thu",week:4,hours:9,coaching:"",chem:["EQUILIBRIA: Learn Kc definition","Practice: Kc from concentrations (20)","Learn: Kc from moles","Practice: Kc calculations (20 - HARD)"],physics:["ELECTRICITY: Resistance, Ohm's Law","Learn: I-V characteristics","Practice: Ohm's Law problems (20)","Draw I-V graphs (8)"],math:["Practice: M1 dynamics review (12)","Past papers P2/P3 (4)"]},
+
+{date:"2026-02-21",day:"Fri",week:4,hours:9,coaching:"3-5PM",chem:["EQUILIBRIA: Learn Kp concept","Practice: Kp calculations (15)","Learn: Partial pressures","Practice: Kp problems (15)"],physics:["CIRCUITS: Series circuits rules","Practice: Series calculations (25)","Learn: Combined resistance series","Recall: Derive formula"],math:["M1: Review all topics so far","Practice mixed M1 (15)","Past papers (3)"]},
+
+{date:"2026-02-22",day:"Sat",week:4,hours:9,coaching:"6:30-10PM",chem:["REVIEW: All equilibria concepts","Intensive Kc/Kp practice (30)","Create summary sheets"],physics:["REVIEW: All electricity basics","Review Ohm's Law applications","Practice mixed (25)"],math:["REVIEW: M1 comprehensive","Past papers intensive (5)"]},
+
+{date:"2026-02-23",day:"Sun",week:4,hours:9,coaching:"3-10PM",chem:["EQUILIBRIA: Mixed practice (25)","Past paper equilibria (10)","Review weak areas"],physics:["CIRCUITS: Parallel circuits rules","Practice: Parallel calculations (25)","Learn: Combined resistance parallel","Recall: Derive formula"],math:["M1: Momentum review","Practice momentum (12)","Past papers (4)"]},
+
+{date:"2026-02-24",day:"Mon",week:4,hours:9,coaching:"6:30-10PM",chem:["KINETICS: Rate equations intro","Learn: Rate constant k","Practice: Rate equation problems (20)","Recall: Rate expressions"],physics:["CIRCUITS: Mixed series-parallel","Practice: Complex circuits (30)","Learn: Circuit analysis methods","Practice: Circuit simplification"],math:["M1: Energy work power review","Practice: M1 energy (12)","Past papers (4)"]},
+
+{date:"2026-02-25",day:"Tue",week:4,hours:9,coaching:"",chem:["WEEK REVIEW: Equilibria test","Kinetics test","Past papers (10)"],physics:["WEEK REVIEW: Electricity & circuits","Full circuit test","Past papers (10)"],math:["WEEK REVIEW: M1 comprehensive","Past papers intensive (6)"]},
+
+// WEEK 5 - Feb 26 to Mar 4
+{date:"2026-02-26",day:"Wed",week:5,hours:9,coaching:"3-10PM",chem:["KINETICS: Order of reaction (0,1st,2nd)","Practice: Order determination (25)","Learn: Initial rate method","Practice: Rate analysis (15)"],physics:["CIRCUITS: Kirchhoff's laws","Practice: Kirchhoff's (20)","Learn: Loop & junction rules","Practice: Complex networks (15)"],math:["M1: Start projectile motion","Practice: Projectiles in M1 (10)","Past papers P2/P3 (4)"]},
+
+{date:"2026-02-27",day:"Thu",week:5,hours:9,coaching:"",chem:["KINETICS: Half-life intensive","Practice: Half-life (20)","Learn: Concentration-time graphs","Practice: Graph analysis (15)"],physics:["CIRCUITS: Power in circuits P=IV","Practice: Power calculations (20)","Learn: P=I²R, P=V²/R","Practice: Power mix (15)"],math:["M1: Projectile motion deep","Practice: Complex projectiles (15)","Past papers (4)"]},
+
+{date:"2026-02-28",day:"Fri",week:5,hours:9,coaching:"3-5PM",chem:["KINETICS: Arrhenius equation","Practice: Activation energy (20)","Learn: Temperature effects","Practice: Arrhenius graphs (10)"],physics:["CIRCUITS: Internal resistance","Practice: EMF & terminal pd (20)","Learn: Lost volts","Practice: Internal r (15)"],math:["M1: Review forces & motion","Practice: Mixed M1 (15)","Past papers (4)"]},
+
+{date:"2026-03-01",day:"Sat",week:5,hours:9,coaching:"6:30-10PM",chem:["REVIEW: All kinetics","Intensive rate problems (35)","Past paper kinetics (15)"],physics:["REVIEW: All circuits","Mixed circuit problems (40)","Past papers circuits (15)"],math:["REVIEW: M1 all topics","Past papers intensive (6)"]},
+
+{date:"2026-03-02",day:"Sun",week:5,hours:9,coaching:"3-10PM",chem:["KINETICS: Mixed practice (30)","Past papers kinetics (15)","Weak area review"],physics:["CIRCUITS: Practice intensive","Timed circuit problems (30)","Past papers (15)"],math:["M1: Comprehensive practice","Mixed problems (20)","Past papers (5)"]},
+
+{date:"2026-03-03",day:"Mon",week:5,hours:9,coaching:"6:30-10PM",chem:["ORGANIC: Reaction mechanisms intro","Learn: Curly arrow notation","Practice: Drawing mechanisms (20)","Recall: Nucleophiles vs electrophiles"],physics:["Review: Electricity complete","Final circuit practice (25)","Self-test circuits"],math:["M1: Start collisions","Practice: Collision problems (12)","Past papers (4)"]},
+
+{date:"2026-03-04",day:"Tue",week:5,hours:9,coaching:"",chem:["WEEK REVIEW: Kinetics full test","Rate calculations test","Past papers (12)"],physics:["WEEK REVIEW: Circuits complete","Timed circuit test","Past papers (12)"],math:["WEEK REVIEW: M1 test","Past papers intensive (7)"]},
+
+// WEEK 6 - Mar 5 to Mar 11
+{date:"2026-03-05",day:"Wed",week:6,hours:9,coaching:"3-10PM",chem:["ORGANIC: Nucleophilic substitution","Learn: SN1 and SN2 mechanisms","Practice: Halogenoalkane reactions (25)","Recall: Draw all mechanisms"],physics:["WAVES: Wave properties intro","Learn: Amplitude, frequency, wavelength","Practice: Wave equation v=fλ (15)","Learn: Transverse vs longitudinal"],math:["M1: Collisions deep","Practice: Elastic/inelastic (15)","Past papers (4)"]},
+
+{date:"2026-03-06",day:"Thu",week:6,hours:9,coaching:"",chem:["ORGANIC: Elimination reactions","Learn: E1 and E2 mechanisms","Practice: Elimination vs substitution (20)","Recall: Predict products"],physics:["WAVES: Wave behavior","Learn: Reflection, refraction","Practice: Snell's Law (15)","Learn: Diffraction basics"],math:["M1: Variable mass systems","Practice: Complex momentum (12)","Past papers (5)"]},
+
+{date:"2026-03-07",day:"Fri",week:6,hours:9,coaching:"3-5PM",chem:["ORGANIC: Electrophilic addition","Learn: Alkene + halogen mechanism","Practice: Addition reactions (25)","Learn: Alkene + HBr mechanism"],physics:["WAVES: EM spectrum","Learn: Wave properties across spectrum","Practice: Wavelength/frequency (15)","Recall: EM spectrum order"],math:["M1: Review all dynamics","Practice: Mixed dynamics (15)","Past papers (4)"]},
+
+{date:"2026-03-08",day:"Sat",week:6,hours:9,coaching:"6:30-10PM",chem:["REVIEW: All organic mechanisms","Intensive mechanism practice (35)","Past papers organic (12)"],physics:["REVIEW: Wave fundamentals","Mixed wave problems (30)","Create wave summary"],math:["REVIEW: M1 complete","Past papers intensive (7)"]},
+
+{date:"2026-03-09",day:"Sun",week:6,hours:9,coaching:"3-10PM",chem:["ORGANIC: Alcohol oxidation","Learn: Primary → aldehyde → acid","Learn: Secondary → ketone","Practice: Oxidation (20)"],physics:["SUPERPOSITION: Interference intro","Learn: Constructive/destructive","Practice: Path difference (15)","Learn: Phase difference"],math:["Complete M1 syllabus","M1 only past papers (5)","Review weak M1 topics"]},
+
+{date:"2026-03-10",day:"Mon",week:6,hours:9,coaching:"6:30-10PM",chem:["ORGANIC: Carbonyl chemistry","Learn: Nucleophilic addition","Practice: Carbonyl reactions (25)","Learn: Tests for aldehydes"],physics:["SUPERPOSITION: Young's double slit","Learn: Path difference formula","Practice: Interference calculations (25)","Recall: Derive fringe spacing"],math:["M1 past papers only (8)","Focus on weak M1 areas"]},
+
+{date:"2026-03-11",day:"Tue",week:6,hours:9,coaching:"",chem:["WEEK REVIEW: Organic mechanisms","Full mechanism test","Past papers (15)"],physics:["WEEK REVIEW: Waves & interference","Full wave test","Past papers (12)"],math:["M1: Comprehensive test","Past papers only (8)"]},
+
+// Continue pattern... Let me create a comprehensive system
+// The pattern continues with hardest topics first through Week 16
+// Then June 1-30 is ALL past papers only
+
+// WEEK 7-16 follow same structure with remaining hard topics:
+// Chemistry: More organic, electrochemistry, inorganic
+// Physics: More waves, superposition, deformation, forces
+// Math: M1 completion + intensive P2/P3 past papers
+
+// Weeks 17-22 (June) = ONLY PAST PAPERS
+        ];
+
+        // Generate remaining days programmatically
+        function generateRemainingDays() {
+            const container = document.getElementById('schedule');
+            
+            schedule.forEach((day, index) => {
+                const card = document.createElement('div');
+                card.className = 'day-card';
+                card.innerHTML = `
+                    <div class="day-header" onclick="toggleDay(this)">
+                        <div class="day-title">${day.day}, ${new Date(day.date).toLocaleDateString('en-US', {month:'short', day:'numeric'})}</div>
+                        <div class="day-meta">Week ${day.week} | ${day.hours}h ${day.coaching ? '| Coaching: '+day.coaching : ''}</div>
+                    </div>
+                    <div class="task-section">
+                        <div class="task-header">Chemistry (${day.hours < 9 ? '3h' : '4h'})</div>
+                        <div class="task-list">
+                            ${day.chem.map((task, i) => `
+                                <div class="task-item">
+                                    <input type="checkbox" id="c-${index}-${i}">
+                                    <label for="c-${index}-${i}">${task}</label>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                    <div class="task-section">
+                        <div class="task-header">Physics (${day.hours < 9 ? '1.5h' : day.hours === 7 ? '2.5h' : '3.5h'})</div>
+                        <div class="task-list">
+                            ${day.physics.map((task, i) => `
+                                <div class="task-item">
+                                    <input type="checkbox" id="p-${index}-${i}">
+                                    <label for="p-${index}-${i}">${task}</label>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                    <div class="task-section">
+                        <div class="task-header">Math M1 + Past Papers (${day.hours < 9 ? '0.5h' : day.hours === 7 ? '1h' : '1.5h'})</div>
+                        <div class="task-list">
+                            ${day.math.map((task, i) => `
+                                <div class="task-item">
+                                    <input type="checkbox" id="m-${index}-${i}">
+                                    <label for="m-${index}-${i}">${task}</label>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+
+            // Add Phase 2 detailed days (Week 7-16)
+            addPhase2Days();
+            
+            // Add Phase 3 past paper days (Week 17-22)
+            addPhase3Days();
+            
+            // Load saved checkboxes
+            loadCheckboxes();
+        }
+
+        function addPhase2Days() {
+            // Weeks 7-16 with remaining topics
+            const phase2Topics = [
+                // Week 7-8: More Organic
+                {week:7, chemTopic:"Organic - Carboxylic acids", physicsTopic:"Superposition - Diffraction"},
+                {week:8, chemTopic:"Organic - Acid derivatives", physicsTopic:"Superposition - Stationary waves"},
+                // Week 9-10: Organic completion
+                {week:9, chemTopic:"Organic - Nitrogen compounds", physicsTopic:"Waves practice intensive"},
+                {week:10, chemTopic:"Organic - Polymerisation", physicsTopic:"Deformation - Hooke's Law"},
+                // Week 11-12: Electrochemistry
+                {week:11, chemTopic:"Electrochemistry - Redox", physicsTopic:"Deformation - Stress & strain"},
+                {week:12, chemTopic:"Electrochemistry - Electrode potentials", physicsTopic:"Deformation - Young modulus"},
+                // Week 13-14: Inorganic
+                {week:13, chemTopic:"Periodic Table trends", physicsTopic:"Forces - Pressure fluids"},
+                {week:14, chemTopic:"Group 2 & 17", physicsTopic:"Forces - Density & upthrust"},
+                // Week 15-16: Easier topics + review
+                {week:15, chemTopic:"Physical chem review", physicsTopic:"Particle physics"},
+                {week:16, chemTopic:"Analytical techniques", physicsTopic:"Final physics review"}
+            ];
+
+            const container = document.getElementById('schedule');
+            
+            // Add phase 2 divider
+            const phase2Div = document.createElement('div');
+            phase2Div.innerHTML = `
+                <div class="phase-divider"></div>
+                <div class="phase-title">PHASE 2: Content Coverage (Weeks 4-16)</div>
+                <div class="note"><strong>Hardest topics first approach</strong> | 9h daily | Chemistry 4h, Physics 3.5h, Math 1.5h</div>
+            `;
+            container.appendChild(phase2Div);
+
+            // Generate weeks 7-16 (already have 4-6)
+            let dayCounter = schedule.length;
+            for (let w = 7; w <= 16; w++) {
+                for (let d = 0; d < 7; d++) {
+                    const date = new Date(2026, 2, 12 + (w-3)*7 + d); // Start from week 3 end
+                    const dayNames = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+                    const topicWeek = phase2Topics.find(t => t.week === w) || {chemTopic:"Review", physicsTopic:"Review"};
+                    
+                    const card = document.createElement('div');
+                    card.className = 'day-card';
+                    card.innerHTML = `
+                        <div class="day-header" onclick="toggleDay(this)">
+                            <div class="day-title">${dayNames[d]}, ${date.toLocaleDateString('en-US', {month:'short', day:'numeric'})}</div>
+                            <div class="day-meta">Week ${w} | 9h</div>
+                        </div>
+                        <div class="task-section">
+                            <div class="task-header">Chemistry (4h) - ${topicWeek.chemTopic}</div>
+                            <div class="task-list">
+                                <div class="task-item">
+                                    <input type="checkbox" id="c-${dayCounter}-0">
+                                    <label for="c-${dayCounter}-0">Learn: ${topicWeek.chemTopic} concepts</label>
+                                </div>
+                                <div class="task-item">
+                                    <input type="checkbox" id="c-${dayCounter}-1">
+                                    <label for="c-${dayCounter}-1">Practice: ${topicWeek.chemTopic} problems (20)</label>
+                                </div>
+                                <div class="task-item">
+                                    <input type="checkbox" id="c-${dayCounter}-2">
+                                    <label for="c-${dayCounter}-2">Recall: Self-test without notes</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="task-section">
+                            <div class="task-header">Physics (3.5h) - ${topicWeek.physicsTopic}</div>
+                            <div class="task-list">
+                                <div class="task-item">
+                                    <input type="checkbox" id="p-${dayCounter}-0">
+                                    <label for="p-${dayCounter}-0">Learn: ${topicWeek.physicsTopic} theory</label>
+                                </div>
+                                <div class="task-item">
+                                    <input type="checkbox" id="p-${dayCounter}-1">
+                                    <label for="p-${dayCounter}-1">Practice: ${topicWeek.physicsTopic} problems (18)</label>
+                                </div>
+                                <div class="task-item">
+                                    <input type="checkbox" id="p-${dayCounter}-2">
+                                    <label for="p-${dayCounter}-2">Recall: Explain concepts aloud</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="task-section">
+                            <div class="task-header">Math (1.5h) - M1 + P2/P3 Past Papers</div>
+                            <div class="task-list">
+                                <div class="task-item">
+                                    <input type="checkbox" id="m-${dayCounter}-0">
+                                    <label for="m-${dayCounter}-0">M1: Practice problems (10)</label>
+                                </div>
+                                <div class="task-item">
+                                    <input type="checkbox" id="m-${dayCounter}-1">
+                                    <label for="m-${dayCounter}-1">Solve 4 P2/P3 past paper questions</label>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    container.appendChild(card);
+                    dayCounter++;
+                }
+            }
+        }
+
+        function addPhase3Days() {
+            const container = document.getElementById('schedule');
+            
+            // Add phase 3 divider
+            const phase3Div = document.createElement('div');
+            phase3Div.innerHTML = `
+                <div class="phase-divider"></div>
+                <div class="phase-title">PHASE 3: Past Papers Only (June 1-30)</div>
+                <div class="note"><strong>Exam Mode:</strong> Morning 3h (review weak topics) | Afternoon 2h (solve 1 timed paper) | Evening 2h (mark & analyze) | Night 2h (redo mistakes)</div>
+            `;
+            container.appendChild(phase3Div);
+
+            // June 1-30 schedule
+            const papers = ['Chemistry', 'Physics', 'M1', 'P2', 'P3'];
+            let paperRotation = 0;
+            
+            for (let day = 1; day <= 30; day++) {
+                const date = new Date(2026, 5, day); // June = month 5
+                const dayNames = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+                const currentPaper = papers[paperRotation % papers.length];
+                
+                const card = document.createElement('div');
+                card.className = 'day-card';
+                card.innerHTML = `
+                    <div class="day-header" onclick="toggleDay(this)">
+                        <div class="day-title">${dayNames[date.getDay()]}, June ${day}</div>
+                        <div class="day-meta">PAST PAPERS | Focus: ${currentPaper}</div>
+                    </div>
+                    <div class="task-section">
+                        <div class="task-header">Morning Session (3h)</div>
+                        <div class="task-list">
+                            <div class="task-item">
+                                <input type="checkbox" id="june-${day}-morning">
+                                <label for="june-${day}-morning">Review weak topics from yesterday's ${currentPaper} paper</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="task-section">
+                        <div class="task-header">Afternoon Session (2h)</div>
+                        <div class="task-list">
+                            <div class="task-item">
+                                <input type="checkbox" id="june-${day}-afternoon">
+                                <label for="june-${day}-afternoon">Solve 1 full ${currentPaper} paper TIMED</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="task-section">
+                        <div class="task-header">Evening Session (2h)</div>
+                        <div class="task-list">
+                            <div class="task-item">
+                                <input type="checkbox" id="june-${day}-evening-1">
+                                <label for="june-${day}-evening-1">Mark paper thoroughly using mark scheme</label>
+                            </div>
+                            <div class="task-item">
+                                <input type="checkbox" id="june-${day}-evening-2">
+                                <label for="june-${day}-evening-2">Analyze every mistake - why wrong, concept missed</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="task-section">
+                        <div class="task-header">Night Session (2h)</div>
+                        <div class="task-list">
+                            <div class="task-item">
+                                <input type="checkbox" id="june-${day}-night-1">
+                                <label for="june-${day}-night-1">Redo ALL wrong questions without looking</label>
+                            </div>
+                            <div class="task-item">
+                                <input type="checkbox" id="june-${day}-night-2">
+                                <label for="june-${day}-night-2">Note weak topics for tomorrow's review</label>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                container.appendChild(card);
+                paperRotation++;
+            }
+        }
+
+        function toggleDay(header) {
+            const card = header.parentElement;
+            card.classList.toggle('collapsed');
+        }
+
+        function expandAll() {
+            document.querySelectorAll('.day-card').forEach(card => {
+                card.classList.remove('collapsed');
+            });
+        }
+
+        function collapseAll() {
+            document.querySelectorAll('.day-card').forEach(card => {
+                card.classList.add('collapsed');
+            });
+        }
+
+        function loadCheckboxes() {
+            document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
+                const saved = localStorage.getItem(checkbox.id);
+                if (saved === 'true') checkbox.checked = true;
+                
+                checkbox.addEventListener('change', function() {
+                    localStorage.setItem(this.id, this.checked);
+                });
+            });
+        }
+
+        function updateCountdown() {
+            const today = new Date();
+            const end = new Date('2026-06-30');
+            const days = Math.ceil((end - today) / (1000*60*60*24));
+            document.getElementById('daysLeft').textContent = days;
+        }
+
+        // Initialize
+        generateRemainingDays();
+        updateCountdown();
+        
+        // Start with all collapsed for performance
+        setTimeout(() => collapseAll(), 100);
+    </script>
+</body>
+</html>
